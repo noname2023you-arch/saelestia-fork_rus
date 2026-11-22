@@ -5,6 +5,37 @@ return {
     ---- HYPRLAND ----
     ------------------
 
+    -- Apps (названия пунктов меню — полностью на русском)
+    terminalName               = "Терминал",
+    browserName                = "Интернет-браузер",
+    editorName                 = "Редактор кода",
+    fileExplorerName           = "Файлы",
+    audioSettingsName          = "Настройки звука",
+
+    -- Пункты меню запуска (launcher): подпись -> команда
+    launcherItems = {
+        { label = "Терминал",            command = "foot" },
+        { label = "Интернет-браузер",    command = "firefox" },
+        { label = "Редактор кода",       command = "codium" },
+        { label = "Файлы",               command = "thunar" },
+        { label = "Настройки звука",     command = "pwvucontrol" },
+        { label = "Проводник",           command = "yazi" },
+        { label = "Просмотр кода",       command = "bat" },
+        { label = "Системный монитор",   command = "btop" },
+        { label = "Меню сессии",         command = "__session__" },
+        { label = "Справка по клавишам", command = "__help__" },
+    },
+
+    -- Меню сессии (Ctrl+Alt+Delete): подпись -> команда
+    sessionItems = {
+        { label = "Заблокировать экран",  command = "__lock__" },
+        { label = "Спящий режим",         command = "systemctl suspend" },
+        { label = "Гибернация",           command = "systemctl hibernate" },
+        { label = "Перезагрузка",         command = "systemctl reboot" },
+        { label = "Выключить питание",    command = "systemctl poweroff" },
+        { label = "Выход из сессии",      command = "__exit__" },
+    },
+
     -- Apps
     terminal                   = "foot",
     browser                    = "firefox",

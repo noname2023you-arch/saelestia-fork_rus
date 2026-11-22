@@ -15,6 +15,7 @@ packages = [
     "xdg-desktop-portal-hyprland",
     "xdg-desktop-portal-gtk",
     "ttf-jetbrains-mono-nerd",
+    "fuzzel",
 ]
 post_install = [
     "mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/caelestia",
