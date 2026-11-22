@@ -49,18 +49,18 @@ local function extend_keybind(base, suffix)
     return valid_keybind(base) and base .. " + " .. suffix or nil
 end
 
--- Launcher
+-- Меню запуска (русское)
 local launcher_default = normalise_keybind("SUPER + SUPER_L")
 create_bind(
     vars.kbLauncher,
-    hl.dsp.global("caelestia:launcher"),
+    fn.launcher_menu,
     function(key)
         return normalise_keybind(key) == launcher_default and release or nil
     end
 )
 
 -- Misc
-create_bind(vars.kbSession, hl.dsp.global("caelestia:session"))
+create_bind(vars.kbSession, fn.session_menu)
 create_bind(vars.kbShowSidebar, hl.dsp.global("caelestia:sidebar"))
 create_bind(vars.kbClearNotifs, hl.dsp.global("caelestia:clearNotifs"), locked)
 create_bind(vars.kbShowPanels, hl.dsp.global("caelestia:showall"))

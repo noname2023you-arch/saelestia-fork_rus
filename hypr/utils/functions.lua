@@ -285,6 +285,67 @@ local function toggle(special_workspace)
     end
 end
 
+-- Русское меню (launcher / меню сессии) поверх fuzzel.
+-- Строит sh-скрипт: показывает русские подписи пунктов,
+-- а после выбора выполняет нужную команду или действие.
+local function menu_script(items, actions)
+    actions = actions or {}
+
+    local echo_lines, case_lines = {}, {}
+
+    for _, item in ipairs(items or {}) do
+        if item.label and item.command then
+            -- Защита от одинарных кавычек в подписях
+            local label = tostring(item.label):gsub("'", "'\\''")
+            local cmd   = actions[item.command] or item.command
+
+            table.insert(echo_lines, "printf '%s\\n' '" .. label .. "'")
+            table.insert(case_lines, "'" .. label .. "') " .. tostring(cmd) .. " ;;")
+        end
+    end
+
+    if #echo_lines == 0 then return nil end
+
+    return table.concat(echo_lines, "; ") ..
+        " | fuzzel -d -p 'Поиск: ' | { read -r sel; case \"$sel\" in " ..
+        table.concat(case_lines, " ") .. " esac; }"
+end
+
+-- Действия для пунктов меню сессии
+local function session_actions()
+    return {
+        __lock__ = "caelestia shell dispatch caelestia:lock",
+        __exit__ = "hyprctl dispatch exit",
+    }
+end
+
+-- Меню сессии (Ctrl + Alt + Delete)
+local function session_menu()
+    local script = menu_script(vars.sessionItems, session_actions())
+
+    if script then
+        hl.dispatch(hl.dsp.exec_cmd("sh -c " .. shell_join({ script })))
+    else
+        -- Если пункты не настроены — встроенное меню caelestia
+        hl.dispatch(hl.dsp.global("caelestia:session"))
+    end
+end
+
+-- Меню запуска (Win + Win)
+local function launcher_menu()
+    local script = menu_script(vars.launcherItems, {
+        __session__ = menu_script(vars.sessionItems, session_actions()) or "true",
+        __help__    = "caelestia shell toaster info " ..
+            shell_join({ "Справка по клавишам", "Win+Win — меню, Ctrl+Alt+Del — сессия, Win+L — блокировка" }),
+    })
+
+    if script then
+        hl.dispatch(hl.dsp.exec_cmd("sh -c " .. shell_join({ script })))
+    else
+        hl.dispatch(hl.dsp.global("caelestia:launcher"))
+    end
+end
+
 return {
     resizer              = resizer,
     resize_by_screen     = resize_by_screen,
@@ -292,4 +353,6 @@ return {
     wsaction             = wsaction,
     move_actions         = move_actions,
     toggle               = toggle,
+    launcher_menu        = launcher_menu,
+    session_menu         = session_menu,
 }
